@@ -20,6 +20,7 @@ public class UsersController : ControllerBase
     {
         _context = context;
     }
+
     // Create a user.
     // POST: users
     [HttpPost]
@@ -142,7 +143,6 @@ public class UsersController : ControllerBase
 
         await _context.SaveChangesAsync();
 
-
         return CreatedAtAction(
                 nameof(GetTasks),
                 new { id = userTask.Id},
@@ -164,7 +164,7 @@ public class UsersController : ControllerBase
                     StartDate = u.StartDate,
                     EndDate = u.EndDate
                 }).ToListAsync();
-    //Return tasks
+    
     return Ok(tasks);
     }
     
@@ -182,8 +182,7 @@ public class UsersController : ControllerBase
     _context.UTasks.Remove(utask);
     await _context.SaveChangesAsync();
 
-    return NoContent();
-    
+    return NoContent();    
     }
 
 }
