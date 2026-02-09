@@ -149,3 +149,4 @@
 /home/tando/Portfolio/dotNet/TodoApi/obj/Debug/net10.0/TodoApi.pdb
 /home/tando/Portfolio/dotNet/TodoApi/obj/Debug/net10.0/TodoApi.genruntimeconfig.cache
 /home/tando/Portfolio/dotNet/TodoApi/obj/Debug/net10.0/ref/TodoApi.dll
+/home/tando/Portfolio/dotNet/TodoApi/obj/Debug/net10.0/TodoApi.sourcelink.json
