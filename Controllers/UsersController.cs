@@ -20,7 +20,7 @@ public class UsersController : ControllerBase
     {
         _context = context;
     }
-
+    // Create a user.
     // POST: users
     [HttpPost]
     public async Task<IActionResult> CreateUser([FromBody] CreateUserDto dto)
@@ -58,7 +58,10 @@ public class UsersController : ControllerBase
                 userDto);
 
     }
-
+    
+    // Get all users.
+    // GET: /users
+    // TODO: Limit access to admin users.
     [HttpGet]
     public async Task<ActionResult<IEnumerable<GetUserDto>>> GetUsers(){
         var users = await _context.Users.Select(u => new GetUserDto
@@ -70,7 +73,7 @@ public class UsersController : ControllerBase
 
         return Ok(users);
     }
-    
+    // Get specific user. 
     // GET : users/{id}
     [HttpGet("{id}")]
     public async Task<ActionResult<GetUserDto>> GetUser(string id){
@@ -89,10 +92,28 @@ public class UsersController : ControllerBase
 
         return Ok(userDto);
     }
-    
 
-    //
-    [HttpPost("tasks/{id}")]
+
+    // Delete specific user
+    // DELETE: users/{id}
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteUser(string id){
+
+        var user = await _context.Users.FindAsync(id);
+
+        if(user == null){
+            return NotFound("User not found.");
+        }
+
+        _context.Users.Remove(user);
+        await _context.SaveChangesAsync();
+    
+        return NoContent();
+    }
+    
+    // Create a new task for specific user.
+    //POST: /{user_id}/tasks/
+    [HttpPost("{id}/tasks")]
     public async Task<IActionResult> CreateTask(string id, [FromBody] CreateTaskDto dto){
     
         // Check if format is correct.
@@ -127,8 +148,9 @@ public class UsersController : ControllerBase
                 new { id = userTask.Id},
                 taskDto);
     }
-
-    // User access tasks
+    
+    // Get all tasks for a specific user.
+    // GET: users/{user_id}/tasks
     [HttpGet("{id}/tasks")]
     public async Task<ActionResult<IEnumerable<GetTaskDto>>> GetTasks(string id)    {
    
@@ -144,6 +166,24 @@ public class UsersController : ControllerBase
                 }).ToListAsync();
     //Return tasks
     return Ok(tasks);
+    }
+    
+    // Delete task from specific user.
+    // DELETE: users/{user_id}/tasks/{task_id}
+    [HttpDelete("{user_id}/tasks/{task_id}")]
+    public async Task<IActionResult> RemoveTask(string user_id, string task_id){
+    
+    var utask = await _context.UTasks.FirstOrDefaultAsync(u => u.UserId == user_id && u.Id == task_id);
+
+    if(utask == null){
+        return NotFound("Task not found");
+    }
+
+    _context.UTasks.Remove(utask);
+    await _context.SaveChangesAsync();
+
+    return NoContent();
+    
     }
 
 }
